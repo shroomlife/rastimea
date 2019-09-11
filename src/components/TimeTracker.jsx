@@ -33,6 +33,52 @@ const INITIAL_TASK = {
 
 const STORAGE_NAME = 'STORAGE_rastimea';
 
+const DetailDailyView = ({ task }) => {
+	return (
+		<Grid item xs={12}>
+			<Typography>Today</Typography>
+			{task.history
+				.filter((value, index) => {
+					return moment().isSame(value.started, 'day');
+				})
+				.reverse()
+				.map((value, index) => {
+					const from = moment(value.started).format('H:s');
+					const to = moment(value.ended).format('H:s');
+					const duration = moment(value.ended) - moment(value.started);
+					const humanizedDuration = humanizeDuration(duration);
+					console.log(duration, humanizeDuration);
+					return (
+						<Typography key={index}>
+							{from} => {to}
+							<br />
+							<small>duration: {humanizedDuration}</small>
+						</Typography>
+					);
+				})}
+		</Grid>
+	);
+};
+
+class DurationCounter extends React.Component {
+
+  constructor(props) {
+    super(props);
+    console.log("PROPS", props);
+    this.state = {};
+  }
+	componentDidMount() {
+		this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
+	}
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
+
+	render() {
+		return <TimeAgo date={this.props.startTime} />;
+	}
+}
+
 export default class TimeTracker extends React.Component {
 	constructor(props) {
 		super(props);
@@ -44,25 +90,22 @@ export default class TimeTracker extends React.Component {
 		if (loadedData) {
 			this.state = parsedState;
 		} else {
-			this.state = INITIAL_STATE;
+			this.state = Object.assign({}, INITIAL_STATE);
 		}
-
-		console.log(props);
 
 		this.handleAddNewTask = this.handleAddNewTask.bind(this);
 		this.handleTaskStart = this.handleTaskStart.bind(this);
 		this.handleTaskStop = this.handleTaskStop.bind(this);
 		this.handleRemoveTask = this.handleRemoveTask.bind(this);
-    
+
 		this.addNewTaskForm = React.createRef();
-  }
-  
-  getCurrentStateObject() {
-    return Object.assign({}, this.state);
-  }
+	}
+
+	getCurrentStateObject() {
+		return Object.assign({}, this.state);
+	}
 
 	handleAddNewTask(data, form) {
-
 		const currentState = this.getCurrentStateObject();
 		const newTask = Object.assign({}, INITIAL_TASK);
 
@@ -70,18 +113,19 @@ export default class TimeTracker extends React.Component {
 
 		currentState.tasks.push(newTask);
 
-    this.setState(currentState, this.onStateUpdated);
-    form.resetForm();
+		this.setState(currentState, this.onStateUpdated);
+		form.resetForm();
+	}
 
-  }
-  
-  handleRemoveTask(key) {
-    const currentState = this.getCurrentStateObject();
-    delete currentState.tasks[key];
-    currentState.tasks = currentState.tasks.filter(() => { return true; });
-    console.log(currentState.tasks);
-    this.setState(currentState, this.onStateUpdated);
-  }
+	handleRemoveTask(key) {
+		const currentState = this.getCurrentStateObject();
+		delete currentState.tasks[key];
+		currentState.tasks = currentState.tasks.filter(() => {
+			return true;
+		});
+		console.log(currentState.tasks);
+		this.setState(currentState, this.onStateUpdated);
+	}
 
 	handleTaskStart(key) {
 		const currentState = this.getCurrentStateObject();
@@ -106,12 +150,11 @@ export default class TimeTracker extends React.Component {
 			duration: taskRunDuration
 		};
 
-    newTask.started = false;
-    
-    newTask.history = newTask.history.concat([newTaskRun]);
+		newTask.started = false;
 
-    this.setState(currentState, this.onStateUpdated);
-    
+		newTask.history = newTask.history.concat([ newTaskRun ]);
+
+		this.setState(currentState, this.onStateUpdated);
 	}
 
 	clearTasks() {
@@ -120,16 +163,10 @@ export default class TimeTracker extends React.Component {
 	}
 
 	onStateUpdated() {
-    console.log("NEW STATE", this.state);
+		console.log('NEW STATE', this.state);
 		localStorage.setItem(STORAGE_NAME, JSON.stringify(this.state));
 	}
 
-	componentDidMount() {
-		this.interval = setInterval(() => this.setState({ time: Date.now() }), 1337);
-	}
-	componentWillUnmount() {
-		clearInterval(this.interval);
-	}
 
 	render() {
 		return (
@@ -147,14 +184,14 @@ export default class TimeTracker extends React.Component {
 											<Grid item xs={12}>
 												{this.state.tasks.map((task, key) => {
 													const isRunning = task.started !== false;
-                          const historyLength = task.history.length;
-                          const hasHistory = historyLength > 0;
+													const historyLength = task.history.length;
+													const hasHistory = historyLength > 0;
 
-                          let lastLog = false;
-                          
-                          if(hasHistory) {
-                            lastLog = task.history[historyLength-1];
-                          }
+													let lastLog = false;
+
+													if (hasHistory) {
+														lastLog = task.history[historyLength - 1];
+													}
 
 													return (
 														<Paper key={key} className="taskItem">
@@ -164,16 +201,16 @@ export default class TimeTracker extends React.Component {
 
 																	{isRunning ? (
 																		<Typography component="p">
-																			started <TimeAgo date={task.started} />
+																			started{' '}
+																			<DurationCounter startTime={task.started} />
 																		</Typography>
-																	) : (
-                                    hasHistory ? <Typography component="p">
-                                    last ended {moment(lastLog.ended).format('Y/M/D, H:m:s')}
-                                    <small>{humanizeDuration(lastLog.duration)}</small>
-                                  </Typography> : null
-                                    
-                                  )
-																	}
+																	) : hasHistory ? (
+																		<Typography component="p">
+																			last ended{' '}
+																			{moment(lastLog.ended).format('Y/M/D, H:m:s')}
+																			<small>{humanizeDuration(lastLog.duration)}</small>
+																		</Typography>
+																	) : null}
 																</Grid>
 																<Grid item xs={5} className="actionButtonContainer">
 																	{!isRunning ? (
@@ -203,24 +240,25 @@ export default class TimeTracker extends React.Component {
 																			variant="contained"
 																			color="default"
 																			onClick={() => {
-                                        props.history.push(`/history/${key}/`);
+																				props.history.push(`/history/${key}/`);
 																			}}
 																		>
 																			<MdHistory /> History
 																		</Button>
 																	) : null}
 																	{!isRunning ? (
-                                  <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={() => {
-                                      this.handleRemoveTask(key);
-                                    }}
-                                  >
-                                    <MdRemove /> Remove
-                                  </Button>
+																		<Button
+																			variant="contained"
+																			color="secondary"
+																			onClick={() => {
+																				this.handleRemoveTask(key);
+																			}}
+																		>
+																			<MdRemove /> Remove
+																		</Button>
 																	) : null}
 																</Grid>
+																{hasHistory ? <DetailDailyView task={task} /> : null}
 															</Grid>
 														</Paper>
 													);
@@ -247,8 +285,8 @@ export default class TimeTracker extends React.Component {
 							}}
 						/>
 						<Route
-              path="/history/:key"
-              render={(props) => <History {...props} task={this.state.tasks[props.match.params.key]} />}
+							path="/history/:key"
+							render={(props) => <History {...props} task={this.state.tasks[props.match.params.key]} />}
 						/>
 					</Router>
 				</Container>
