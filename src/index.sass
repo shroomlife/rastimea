@@ -2,25 +2,52 @@
   margin-bottom: 1rem
   small
     display: block
+  .taskCurrentData
+    >*
+      margin: 0 .66rem
+    p, h5
+      padding: 0
+    .MuiChip-root
+      margin-top: .33rem
+.taskItem.running
+  background-color: rgba(148, 229, 255, .33)
 .historyItem
-  strong
-    display: block
-    padding: 0 .66rem
-    font-weight: bold
-  .duration
-    padding: .33rem .66rem
+  padding: .33rem
+  .historyData
+    .historyDataBlock
+      display: flex
+      padding: .22rem .33rem
+      align-items: center
+      .MuiIconButton-root
+        padding: 0
+      .MuiInputBase-input
+        padding-left: .33rem
+    svg
+      font-size: 24px
+      margin-right: .33rem
+      flex-shrink: 0
 .taskList
   width: 100%
   display: block
   padding: 1rem 0
+  .MuiDivider-root
+    margin-bottom: .66rem
   h5, p
     display: block
     align-items: center
     padding: 0 .66rem
 .content
   padding-top: 1rem
-.actionButtonContainer
-  .MuiButton-root, svg
-    margin-right: .33rem
 header
   background-color: #94e5ff !important
+  .logo
+    margin-right: .33rem
+.actionButtonContainer 
+  display: flex
+  align-items: center
+  flex-direction: column
+  .MuiFab-root
+    box-shadow: none !important
+.historyChips
+  .MuiChip-root
+    margin-left: .33rem
