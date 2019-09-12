@@ -1,4 +1,4 @@
-# oerwi
+# rastimea
 the best time tracking app ever! track your work, activities or what ever you wish. no ads, no bullshit.
 
 ## Getting Started
