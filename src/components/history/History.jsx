@@ -24,7 +24,6 @@ const History = (props) => {
 	let dailyHistory = {};
 
 	task.history.forEach((historyItem, itemKey) => {
-		console.log(historyItem);
 		const currentDay = moment(historyItem.started).format('YYYY-MM-DD');
 
 		if (typeof dailyHistory[currentDay] === 'undefined') {
@@ -42,8 +41,6 @@ const History = (props) => {
 
 		dailyHistory[currentDay].totalLogged += duration;
 	});
-
-	console.log('DAILY HISTORY', dailyHistory);
 
 	return (
 		<Grid container>

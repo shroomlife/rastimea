@@ -17,8 +17,6 @@ export default class HistoryItem extends React.Component {
 	constructor(props) {
 		super(props);
 
-		console.log('PROPS', props);
-
 		this.state = {
 			historyItem: this.props.historyItem,
 			edit: false,

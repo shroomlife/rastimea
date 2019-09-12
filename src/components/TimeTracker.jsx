@@ -75,7 +75,6 @@ const DetailDailyView = ({ task }) => {
 class DurationCounter extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log('PROPS', props);
 		this.state = {};
 	}
 	componentDidMount() {
@@ -115,7 +114,6 @@ export default class TimeTracker extends React.Component {
 		let loadedData = localStorage.getItem(STORAGE_NAME);
 		let parsedState = JSON.parse(loadedData);
 
-		console.log(parsedState);
 		if (loadedData) {
 			this.state = parsedState;
 		} else {
@@ -164,7 +162,6 @@ export default class TimeTracker extends React.Component {
 				currentState.tasks = currentState.tasks.filter(() => {
 					return true;
 				});
-				console.log(currentState.tasks);
 				this.setState(currentState, this.onStateUpdated);
 
 				Swal.fire('Deleted!', `${currentTask.name} has been removed`, 'success');
@@ -212,7 +209,6 @@ export default class TimeTracker extends React.Component {
 	}
 
 	onStateUpdated() {
-		console.log('NEW STATE', this.state);
 		localStorage.setItem(STORAGE_NAME, JSON.stringify(this.state));
 	}
 
