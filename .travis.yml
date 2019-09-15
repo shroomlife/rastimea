@@ -1,0 +1,8 @@
+install:
+  - yarn install
+  - yarn build
+deploy:
+  provider: firebase
+  token:
+    secure: "1/I02ZlkepGkXbY3oKssIClQsMxE1dyeBIkGTbicud7dc"
+  project: "rastimea"
