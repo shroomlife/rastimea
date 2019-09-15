@@ -18,6 +18,6 @@ jobs:
       - name: build
         run: yarn build
       - name: prepare deploy
-        run: mkdir ~/.npm-global && npm config set prefix '~/.npm-global' && export PATH=~/.npm-global/bin:$PATH && source ~/.profile && npm install -g firebase-tools
+        run: mkdir -p /root/.npm-global && npm config set prefix /root/.npm-global && export PATH=$PATH:/root/.npm-global/bin && npm install -g firebase-tools
       - name: deploy to firebase
         run: firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}" -only hosting
