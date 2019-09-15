@@ -1,4 +1,4 @@
-name: docker push shroomlife/hongi-cms:master
+name: firebsae deploy
 
 on:
   push:
