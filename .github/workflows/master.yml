@@ -17,6 +17,8 @@ jobs:
         run: yarn install
       - name: build
         run: yarn build
+      - name: test
+        run: yarn test
       - name: prepare deploy
         run: mkdir -p /tmp/npm-global && npm config set prefix /tmp/npm-global && export PATH=$PATH:/tmp/npm-global/bin
       - name: install firebase-tools
